@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>Slide Demo</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <script type="text/javascript" src="static/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="static/easySlider1.7.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#slider").easySlider({
+                auto: true,
+                continuous: true,
+            });
+        });
+    </script>
+    <link href="static/easySlider1.7.css" rel="stylesheet" 
+        type="text/css" media="screen"/>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>Demo: {{ datetime.datetime.now() }}</h1>
+        </div>
+        <div id="slider">
+            <ul>
+                {% for file in files %}
+                <li><img src="{{ escape(file) }}" width="800" height="600" /></li>
+                {% end %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Hello, {{ escape(name) }}</title>
+    </head>
+    <body>
+        <link rel="stylesheet" type="text/css" 
+          href="static/jquery.plupload.queue/css/jquery.plupload.queue.css"/>
+        <script type="text/javascript" 
+          src="static/jquery-1.6.4.min.js"></script>
+        <script type="text/javascript" src="static/plupload.js"></script>
+        <script type="text/javascript" src="static/plupload.flash.js"></script>
+        <script type="text/javascript" 
+          src="static/jquery.plupload.queue/jquery.plupload.queue.js"></script>
+        <script type="text/javascript" src="static/i18n/cn.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                function plupload(){
+                    $("#uploader").pluploadQueue({
+                        // General settings
+                        runtimes : 'html5,flash',
+                        url : '/upload',
+                        max_file_size : '30mb',
+                        unique_names: true,
+                        // Specify what files to browse for
+                        filters : [
+                            {title: "Image", extensions: "jpg,gif,png,bmp"},
+                        ],
+                        resize: {width: 800, height: 600, quality: 80},
+                        // Flash settings
+                        flash_swf_url: 'static/plupload.flash.swf',
+                        multipart: false,
+                        multi_selection: true,
+                    });
+                }
+                plupload();
+
+                $('formUpload').submit(function(e) {
+                    var uploader = $('#uploader').pluploadQueue();
+                    if (uploader.files.length > 0) {
+                        uploader.bind('StateChanged', function() { 
+                            if (uploader.files.length 
+                                === (uploader.total.uploaded
+                                    + uploader.total.failed)) {
+                                $('formUpload')[0].submit();
+                            }
+                        });
+                        uploader.start();
+                    } else {
+                        alert('还有文件没有上传完成，请耐心等待');
+                    }
+                    return false;
+                });
+
+                $('#reload').click(function(){
+                    plupload();
+                });
+            });
+        </script>
+        <span style="color: #333300; font-size: 14px;">
+            <div style="width:750px; margin:0 auto">
+                <form id="formUpload" action="/upload" method="post">
+                    <div id="uploader">
+                        <p>您的浏览器未安装 Flash 或者支持 HTML5 .</p>
+                    </div>
+                    <input value="重新上传" id="reload" type="button" />
+                </form>
+                <form id="formShow" action="/slide" method="get">
+                    <input value="显示图片" type="submit" />
+                </form>
+            </div>
+        </span>
+    </body>
+</html>
